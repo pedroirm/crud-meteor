@@ -13,15 +13,14 @@ if (Meteor.isServer) {
             this.response.end(JSON.stringify(response));
         })
 
-        // POST /message - {message as post data}
-        // Add new message in MongoDB collection.
+        // Rota do tipo post para salvar dados do usuari
 
         .post(function () {
             var response;
             if (this.request.body.userName === undefined || this.request.body.userPassword === undefined) {
                 response = {
                     "error": true,
-                    "message": "invalid data"
+                    "message": "Dados invalidos"
                 };
             } else {
                 User.insert({
@@ -30,16 +29,15 @@ if (Meteor.isServer) {
                 });
                 response = {
                     "error": false,
-                    "message": "User added."
+                    "message": "Usuário adicionado com sucesso."
                 }
             }
             this.response.setHeader('Content-Type', 'application/json');
             this.response.end(JSON.stringify(response));
         });
 
+    //   Rota do tipo get feita para listar detalhes de apenas um usuário
     Router.route('/users/:id', { where: 'server' })
-
-        // GET /message/:id - returns specific records
 
         .get(function () {
             var response;
@@ -50,15 +48,14 @@ if (Meteor.isServer) {
                 } else {
                     response = {
                         "error": true,
-                        "message": "User not found."
+                        "message": "Usuário não encontrado."
                     }
                 }
             }
             this.response.setHeader('Content-Type', 'application/json');
             this.response.end(JSON.stringify(response));
         })
-
-        // PUT /message/:id {message as put data}- update specific records.
+        // Rota do tipo put para editar um usuário
 
         .put(function () {
             var response;
@@ -68,27 +65,25 @@ if (Meteor.isServer) {
                     if (User.update({ _id: data[0]._id }, { $set: { UserName: this.request.body.userName, UserPassword: this.request.body.userPassword } }) === 1) {
                         response = {
                             "error": false,
-                            "message": "User information updated."
+                            "message": "Usuário atualizado."
                         }
                     } else {
                         response = {
                             "error": true,
-                            "message": "User information not updated."
+                            "message": "Erro ao atualizar usuário."
                         }
                     }
                 } else {
                     response = {
                         "error": true,
-                        "message": "User not found."
+                        "message": "Usuário não encotrado."
                     }
                 }
             }
             this.response.setHeader('Content-Type', 'application/json');
             this.response.end(JSON.stringify(response));
         })
-
-        // DELETE /message/:id delete specific record.
-
+        // Rota do tipo delete usada para deletar um usuário 
         .delete(function () {
             var response;
             if (this.params.id !== undefined) {
